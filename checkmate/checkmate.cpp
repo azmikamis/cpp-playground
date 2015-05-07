@@ -1,6 +1,7 @@
 #include <iostream>
 #include <set>
-#include <algorithm>
+#include <string>
+#include <vector>
 
 using namespace std;
 
@@ -66,7 +67,7 @@ set< pair<int, int> > knight_moves (int a, int b)
 {
     set< pair<int,int> > nset;
     int moves[8][2]={{2,1},{2,-1},{-2,1},{-2,-1},{1,2},{1,-2},{-1,2},{-1,-2}};
-    for (int i=0; i<2; i++)
+    for (int i=0; i<8; i++)
     {
         if (a+moves[i][0]>0 && a+moves[i][0]<9 && b+moves[i][1]>0 && b+moves[i][1]<9) 
         {
@@ -112,7 +113,9 @@ set< pair<int, int> > rook_moves (int a, int b)
 
 set< pair<int, int> > queen_moves (int a, int b)
 {
-    set< pair<int,int> > qset = bishop_moves(a,b);
+    set< pair<int,int> > qset;
+    set< pair<int,int> > bset = bishop_moves(a,b);
+    qset.insert(bset.begin(), bset.end()); 
     set< pair<int,int> > rset = rook_moves(a,b);
     qset.insert(rset.begin(), rset.end()); 
     return qset;
@@ -122,7 +125,7 @@ set< pair<int, int> > king_moves (int a, int b)
 {
     set< pair<int,int> > kset;
     int moves[8][2]={{1,-1},{1,0},{1,1},{0,-1},{0,1},{-1,-1},{-1,0},{-1,1}};
-    for (int i=0; i<2; i++)
+    for (int i=0; i<8; i++)
     {
         if (a+moves[i][0]>0 && a+moves[i][0]<9 && b+moves[i][1]>0 && b+moves[i][1]<9) 
         {
@@ -134,16 +137,80 @@ set< pair<int, int> > king_moves (int a, int b)
 
 int main()
 {
-    set< pair<int,int> > myset2 = queen_moves(1,2);
-    set< pair<int,int> >::iterator it2;
+    int t;
+    cin >> t;
+    for (int i=0; i<t; i++)
+    {
+        set< pair<int,int> > mymoves;
+        set< pair<int,int> > oppmoves;
+        int n;
+        cin >> n;
+        for (int j=0; j<n; j++)
+        {
+            char ca;
+            char cb;
+            char cc;
+            cin >> ca >> cb >> cc;
 
-    //for (int i=0; i<=5; i++) myset2.insert(make_pair(1,i*10));
-    //for (int i=0; i<=5; i++) myset2.insert(make_pair(1,i*10));
+            int ia;
+            int ib;
+            ia = (int)ca - '0';
+            ib = (int)cb - 'A' + 1;
+            switch(cc)
+            {
+                case 'K':
+                    {
+                        set< pair<int,int> > kmoves = king_moves(ia,ib);
+                        mymoves.insert(kmoves.begin(), kmoves.end());
+                    }
+                    break;
+                case 'P':
+                    {
+                        set< pair<int,int> > pmoves = pawn_moves(ia,ib);
+                        oppmoves.insert(pmoves.begin(), pmoves.end());
+                    }
+                    break;
+                case 'B':
+                    {
+                        set< pair<int,int> > bmoves = bishop_moves(ia,ib);
+                        oppmoves.insert(bmoves.begin(), bmoves.end());
+                    }
+                    break;
+                case 'N':
+                    {
+                        set< pair<int,int> > nmoves = knight_moves(ia,ib);
+                        oppmoves.insert(nmoves.begin(), nmoves.end());
+                    }
+                    break;
+                case 'R':
+                    {
+                        set< pair<int,int> > rmoves = rook_moves(ia,ib);
+                        oppmoves.insert(rmoves.begin(), rmoves.end());
+                    }
+                    break;
+                case 'Q':
+                    {
+                        set< pair<int,int> > qmoves = queen_moves(ia,ib);
+                        oppmoves.insert(qmoves.begin(), qmoves.end());
+                    }
+                    break;
+            }
+        }
+        bool checkmate = true;
+        set< pair<int,int> >::iterator it;
+        for (it=mymoves.begin(); it!=mymoves.end(); ++it)
+        {
+            if (oppmoves.count(*it)==0)
+            {
+                checkmate = false;
+                break;
+            }
+        }
+        if (checkmate)
+            cout << "CHECKMATE" << '\n';
+        else
+            cout << "YES" << '\n';
 
-
-    for (it2=myset2.begin(); it2!=myset2.end(); ++it2)
-        cout << '(' << it2->first << ' ' << it2->second << ')' << '\n';
-
-    cout << '\n';
+    }
     return 0;
 }
