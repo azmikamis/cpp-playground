@@ -8,6 +8,7 @@ using namespace std;
 set< pair<int, int> > pawn_moves (int a, int b)
 {
     set< pair<int,int> > pset;
+    pset.insert(make_pair(a,b));
     int moves[2][2]={{1,-1},{1,1}};
     for (int i=0; i<2; i++)
     {
@@ -26,6 +27,7 @@ set< pair<int, int> > bishop_moves (int a, int b)
     int j;
     i = a;
     j = b;
+    bset.insert(make_pair(a,b));
     while (i>0 && i<9 || j>0 && j<9)
     {
         i-=1;
@@ -66,6 +68,7 @@ set< pair<int, int> > bishop_moves (int a, int b)
 set< pair<int, int> > knight_moves (int a, int b)
 {
     set< pair<int,int> > nset;
+    nset.insert(make_pair(a,b));
     int moves[8][2]={{2,1},{2,-1},{-2,1},{-2,-1},{1,2},{1,-2},{-1,2},{-1,-2}};
     for (int i=0; i<8; i++)
     {
@@ -84,6 +87,7 @@ set< pair<int, int> > rook_moves (int a, int b)
     int j;
     i = a;
     j = b;
+    rset.insert(make_pair(a,b));
     while (i>1)
     {
         i-=1;
@@ -114,6 +118,7 @@ set< pair<int, int> > rook_moves (int a, int b)
 set< pair<int, int> > queen_moves (int a, int b)
 {
     set< pair<int,int> > qset;
+    qset.insert(make_pair(a,b));
     set< pair<int,int> > bset = bishop_moves(a,b);
     qset.insert(bset.begin(), bset.end()); 
     set< pair<int,int> > rset = rook_moves(a,b);
@@ -202,6 +207,7 @@ int main()
         {
             if (oppmoves.count(*it)==0)
             {
+                cout << it->first << ' ' << it->second << '\n';
                 checkmate = false;
                 break;
             }
